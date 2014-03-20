@@ -1,7 +1,8 @@
 class memcached::params {
 
-  $memory       = '512'
-  $bind_address = '0.0.0.0'
+  $memory          = '512'
+  $bind_address    = '0.0.0.0'
+  $max_object_size = '1m'
 
   case $::operatingsystem {
     /^(Debian|Ubuntu)$/: {

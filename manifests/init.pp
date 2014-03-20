@@ -1,4 +1,9 @@
-class memcached () inherits memcached::params {
+class memcached (
+
+$memory          = $memcached::params::memory,
+$max_object_size = $memcached::params::max_object_size
+
+) inherits memcached::params {
 
   anchor {'memcached::begin':
     before => Class['memcached::install']

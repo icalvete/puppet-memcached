@@ -3,19 +3,34 @@ class memcached::config {
   case $::operatingsystem {
     /^(Debian|Ubuntu)$/: {
       exec {'config_memory':
-        command => "/bin/sed -i -e \"s/-m .*/-m ${memcached::params::memory}/\" ${memcached::params::config_file}",
-        unless  => "/bin/grep '-m ${memcached::params::memory}' ${memcached::params::config_file}"
+        command => "/bin/sed -i -e \"s/-m .*/-m ${memcached::memory}/\" ${memcached::params::config_file}",
+        unless  => "/bin/grep '-m ${memcached::memory}' ${memcached::params::config_file}"
       }
 
       exec {'config_bind_address':
         command => "/bin/sed -i -e \"s/-l .*/-l ${memcached::params::bind_address}/\" ${memcached::params::config_file}",
-        unless  => "/bin/grep '-m ${memcached::params::bind_address}' ${memcached::params::config_file}"
+        unless  => "/bin/grep '-l ${memcached::params::bind_address}' ${memcached::params::config_file}"
+      }
+
+      exec {'pre_config_max_object_size':
+        command => "/bin/echo '-I MAXOBJECTSIZE' >> ${memcached::params::config_file}",
+        unless  => "/bin/grep '\-I' ${memcached::params::config_file}"
+      }
+
+      exec {'config_max_object_size':
+        command => "/bin/sed -i -e \"s/-I .*/-I ${memcached::max_object_size}/\" ${memcached::params::config_file}",
+        unless  => "/bin/grep '-I ${memcached::max_object_size}' ${memcached::params::config_file}",
+        require => Exec['pre_config_max_object_size']
       }
     }
     /^(RedHat|CentOS)$/: {
       exec {'config_memory':
-        command => "/bin/sed -i -e \"s/CACHESIZE=.*/CACHESIZE='${memcached::params::memory}'/\" ${memcached::params::config_file}",
-        unless  => "/bin/grep '-m ${memcached::params::memory}' ${memcached::params::config_file}"
+        command => "/bin/sed -i -e \"s/CACHESIZE=.*/CACHESIZE='${memcached::memory}'/\" ${memcached::params::config_file}",
+        unless  => "/bin/grep '-m ${memcached::memory}' ${memcached::params::config_file}"
+      }
+      exec {'config_max_object_size':
+        command => "/bin/sed -i -e \"s/OPTIONS=.*/OPTIONS='-I ${memcached::max_object_size}'/\" ${memcached::params::config_file}",
+        unless  => "/bin/grep '-m ${memcached::max_object_size}' ${memcached::params::config_file}"
       }
     }
     default:{}
