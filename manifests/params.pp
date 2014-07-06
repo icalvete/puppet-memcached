@@ -1,5 +1,6 @@
 class memcached::params {
 
+  $port            = '11211'
   $memory          = '64'
   $bind_address    = '0.0.0.0'
   $max_object_size = '1m'

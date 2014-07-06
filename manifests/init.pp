@@ -1,5 +1,6 @@
 class memcached (
 
+$port            = $memcached::params::port,
 $memory          = $memcached::params::memory,
 $max_object_size = $memcached::params::max_object_size
 

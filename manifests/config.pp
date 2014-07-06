@@ -2,6 +2,11 @@ class memcached::config {
 
   case $::operatingsystem {
     /^(Debian|Ubuntu)$/: {
+      exec {'config_port':
+        command => "/bin/sed -i -e \"s/-p .*/-p ${memcached::port}/\" ${memcached::params::config_file}",
+        unless  => "/bin/grep '-m ${memcached::port}' ${memcached::params::config_file}"
+      }
+
       exec {'config_memory':
         command => "/bin/sed -i -e \"s/-m .*/-m ${memcached::memory}/\" ${memcached::params::config_file}",
         unless  => "/bin/grep '-m ${memcached::memory}' ${memcached::params::config_file}"
