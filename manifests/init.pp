@@ -16,7 +16,7 @@ $max_object_size = $memcached::params::max_object_size
     require => Class['memcached::install']
   }
   class {'memcached::service':
-    subscribe => Class['memcached::config']
+    require => Class['memcached::config']
   }
   anchor {'memcached::end':
     require => Class['memcached::service']
