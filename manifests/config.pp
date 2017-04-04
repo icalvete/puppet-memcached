@@ -19,7 +19,7 @@ class memcached::config {
 
       exec {'pre_config_max_object_size':
         command => "/bin/echo '-I MAXOBJECTSIZE' >> ${memcached::params::config_file}",
-        unless  => "/bin/grep '-I' ${memcached::params::config_file}"
+        unless  => "/bin/grep '\-I' ${memcached::params::config_file}"
       }
 
       exec {'config_max_object_size':
