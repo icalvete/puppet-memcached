@@ -40,4 +40,9 @@ class memcached::config {
     }
     default:{}
   }
+
+  exec {'disable_udp':
+    command => "/bin/echo '-U 0' >> ${memcached::params::config_file}",
+    unless  => "/bin/grep '\-U 0' ${memcached::params::config_file}"
+  }
 }
